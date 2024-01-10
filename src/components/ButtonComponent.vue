@@ -17,4 +17,20 @@ const props = defineProps({
     {{ props.text }}
   </button>
 </template>
-<style scoped></style>
+<style scoped>
+button {
+  background-color: var(--resting-color);
+  border: none;
+  cursor: pointer;
+  padding: 10px 25px;
+  color: #111;
+  transition: background-color 300ms ease-in-out;
+  margin: 20px auto;
+}
+
+.working button {
+  background-color: var(--working-color);
+  color: #fff;
+
+}
+</style>

@@ -1,5 +1,12 @@
+:root {
+  --resting-color: #41e1ba;
+  --working-color: #ef5d50;
+}
+
 * {
   padding: 0;
   margin: 0;
+  outline: none;
   box-sizing: border-box;
 }
+

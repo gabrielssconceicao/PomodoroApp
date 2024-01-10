@@ -15,6 +15,11 @@ const timeFormatted = computed(() => secondsToTime(time.value))
 useInterval(() => time.value -= 1, 1000)
 </script>
 <template>
-  <div>{{ timeFormatted }}</div>
+  <div class="timer">{{ timeFormatted }}</div>
 </template>
-<style scoped></style>
+<style scoped>
+.timer {
+  font-size: 6rem;
+  text-align: center;
+}
+</style>
