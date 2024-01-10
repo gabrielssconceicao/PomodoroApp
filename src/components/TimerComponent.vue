@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, defineProps, watch } from 'vue';
-import { useInterval } from '@/hooks/use-interval';
+import { computed, defineProps } from 'vue';
 import { secondsToTime } from '@/utils/seconds-to-time';
-import { ref } from 'vue';
 const props = defineProps({
   mainTime: {
     type: Number,
@@ -10,9 +8,8 @@ const props = defineProps({
   }
 })
 
-const time = ref(props.mainTime)
-const timeFormatted = computed(() => secondsToTime(time.value))
-useInterval(() => time.value -= 1, 1000)
+
+const timeFormatted = computed(() => secondsToTime(props.mainTime))
 </script>
 <template>
   <div class="timer">{{ timeFormatted }}</div>

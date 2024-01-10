@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import PomodoroView from './views/PomodoroView.vue';
-
 </script>
 
 <template>

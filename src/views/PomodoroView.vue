@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, computed } from 'vue';
 import TimerComponent from '@/components/TimerComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import { defineProps } from 'vue'
+import { useInterval } from '@/hooks/use-interval';
+import { defineProps, ref, watch } from 'vue';
+
 const props = defineProps({
   mainTime: {
     type: Number,
-    required: true
+    required: true,
   },
   shortRestTime: {
     type: Number,
@@ -13,34 +16,25 @@ const props = defineProps({
   },
   longRestTime: {
     type: Number,
-    required: true
+    required: true,
   },
   cycles: {
     type: Number,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const setWorking = () => {
-  const body = document.querySelector('body') as HTMLBodyElement
-  body.classList.add('working')
-}
-
-const setResting = () => {
-  const body = document.querySelector('body') as HTMLBodyElement
-  body.classList.remove('working')
-}
 
 </script>
 
 <template>
   <div class="pomodoro">
-    <h2>You are: working</h2>
-    <TimerComponent :main-time="props.mainTime" />
+    <h2>You are: working {{ }}</h2>
+    <TimerComponent :main-time="mainTime" />
     <div class="controls">
-      <ButtonComponent :text="'Set Working'" :on-click="setWorking" />
-      <ButtonComponent :text="'Set Rest'" :on-click="setResting" />
+      <ButtonComponent :text="'Work'" :on-click="() => { }" />
       <ButtonComponent :text="'teste'" :on-click="() => { }" />
+      <ButtonComponent :text="'Pause'" :on-click="() => { }" />
     </div>
 
     <div class="details">
