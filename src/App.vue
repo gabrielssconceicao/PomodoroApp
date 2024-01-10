@@ -4,7 +4,7 @@ import PomodoroTimer from './components/PomodoroTimerComponent.vue';
 </script>
 
 <template>
-  <PomodoroTimer :main-time="1200" />
+  <PomodoroTimer :main-time="1500" />
 </template>
 
 <style scoped></style>
