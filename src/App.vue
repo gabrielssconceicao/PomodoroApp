@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import PomodoroTimer from './components/PomodoroTimerComponent.vue';
+import PomodoroView from './views/PomodoroView.vue';
 
 </script>
 
 <template>
-  <PomodoroTimer :main-time="1500" />
+  <PomodoroView :main-time="1500" />
 </template>
 
 <style scoped></style>
