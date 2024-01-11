@@ -29,15 +29,31 @@ const setMainTime = () => mainTime.value -= 1;
 
 const timeCounting = ref(false);
 const working = ref(false);
-
-const startWork = () => {
+const resting = ref(false);
+const configureWork = () => {
   timeCounting.value = true;
   working.value = true;
+  resting.value = false;
+  mainTime.value = props.mainTime
 }
-const startPause = () => {
+const configurePause = () => {
   timeCounting.value = !timeCounting.value;
 }
+
+const configureRest = (long: boolean) => {
+  timeCounting.value = true;
+  resting.value = true;
+  working.value = false;
+
+  if (long) {
+    mainTime.value = props.longRestTime
+  } else {
+    mainTime.value = props.shortRestTime
+  }
+}
+
 const pausedText = computed(() => timeCounting.value ? 'Pause' : 'Play')
+const pauseClass = computed(() => !working.value && !resting.value ? 'hidden' : '')
 const { cleanInterval, setupInterval } = useInterval(setMainTime, 1000)
 
 watch(timeCounting, (newValue: boolean) => {
@@ -48,14 +64,10 @@ watch(timeCounting, (newValue: boolean) => {
   cleanInterval();
 })
 
-watch(working, (newValue: boolean) => {
-  const body = document.querySelector('body') as HTMLBodyElement;
-  if (newValue) {
-    body.classList.add('working');
-    return
-  }
-  body.classList.remove('working');
+watch([working, resting], ([newWorking, newResting]: [boolean, boolean]) => {
 
+  if (newWorking) document.body.classList.add('working');
+  if (newResting) document.body.classList.remove('working');
 })
 
 onBeforeUnmount(() => {
@@ -68,9 +80,9 @@ onBeforeUnmount(() => {
     <h2>You are: working {{ }}</h2>
     <TimerComponent :main-time="mainTime" />
     <div class="controls">
-      <ButtonComponent :text="'Work'" :on-click="startWork" />
-      <ButtonComponent :text="pausedText" :on-click="startPause" />
-      <ButtonComponent :text="'Restart'" :on-click="() => { }" />
+      <ButtonComponent :text="'Work'" :on-click="configureWork" />
+      <ButtonComponent :text="pausedText" :on-click="configurePause" :class="pauseClass" />
+      <ButtonComponent :text="'Rest'" :on-click="() => configureRest(false)" />
     </div>
 
     <div class="details">
