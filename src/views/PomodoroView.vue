@@ -4,7 +4,12 @@ import TimerComponent from '@/components/TimerComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useInterval } from '@/hooks/use-interval';
 import { ref, watch } from 'vue';
+import startAudio from '@/assets/sounds/bell-start.mp3';
+import finishAudio from '@/assets/sounds/bell-finish.mp3';
 
+
+const audioStartWorking = new Audio(startAudio)
+const audioFinishWorking = new Audio(finishAudio)
 const props = defineProps({
   mainTime: {
     type: Number,
@@ -30,11 +35,13 @@ const setMainTime = () => mainTime.value -= 1;
 const timeCounting = ref(false);
 const working = ref(false);
 const resting = ref(false);
+
 const configureWork = () => {
   timeCounting.value = true;
   working.value = true;
   resting.value = false;
-  mainTime.value = props.mainTime
+  mainTime.value = props.mainTime;
+  audioStartWorking.play();
 }
 const configurePause = () => {
   timeCounting.value = !timeCounting.value;
@@ -50,6 +57,7 @@ const configureRest = (long: boolean) => {
   } else {
     mainTime.value = props.shortRestTime
   }
+  audioFinishWorking.play()
 }
 
 const pausedText = computed(() => timeCounting.value ? 'Pause' : 'Play')
