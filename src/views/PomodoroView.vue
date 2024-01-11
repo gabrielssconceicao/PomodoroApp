@@ -3,7 +3,7 @@ import { onMounted, onBeforeUnmount, computed } from 'vue';
 import TimerComponent from '@/components/TimerComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useInterval } from '@/hooks/use-interval';
-import { defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   mainTime: {
@@ -23,6 +23,32 @@ const props = defineProps({
     required: true,
   },
 });
+const mainTime = ref(props.mainTime);
+const setMainTime = () => mainTime.value -= 1;
+
+const timeCounting = ref(false);
+const working = ref(false);
+
+const startWork = () => {
+  timeCounting.value = true;
+  working.value = true;
+}
+watch(timeCounting, (newVal) => {
+  if (newVal) {
+    useInterval(setMainTime, 1000)
+  }
+
+})
+
+watch(working, (newValue) => {
+  const body = document.querySelector('body') as HTMLBodyElement;
+  if (newValue) {
+    body.classList.add('working');
+    return
+  }
+  body.classList.remove('working');
+
+})
 
 
 </script>
@@ -32,9 +58,9 @@ const props = defineProps({
     <h2>You are: working {{ }}</h2>
     <TimerComponent :main-time="mainTime" />
     <div class="controls">
-      <ButtonComponent :text="'Work'" :on-click="() => { }" />
-      <ButtonComponent :text="'teste'" :on-click="() => { }" />
+      <ButtonComponent :text="'Work'" :on-click="startWork" />
       <ButtonComponent :text="'Pause'" :on-click="() => { }" />
+      <ButtonComponent :text="'Restart'" :on-click="() => { }" />
     </div>
 
     <div class="details">
