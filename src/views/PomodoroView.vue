@@ -6,6 +6,7 @@ import { useInterval } from '@/hooks/use-interval';
 import { ref, watch } from 'vue';
 import startAudio from '@/assets/sounds/bell-start.mp3';
 import finishAudio from '@/assets/sounds/bell-finish.mp3';
+import { secondsToTime } from '@/utils/seconds-to-time';
 
 
 const audioStartWorking = new Audio(startAudio)
@@ -36,6 +37,12 @@ const timeCounting = ref(false);
 const working = ref(false);
 const resting = ref(false);
 
+const cycles = ref(props.cycles);
+const cyclesQtdManager = ref<boolean[]>(new Array(cycles.value - 1).fill(true));
+const completedCycles = ref(0);
+const fullWorkTime = ref(0);
+const numberOfPomodoros = ref(0);
+
 const configureWork = () => {
   timeCounting.value = true;
   working.value = true;
@@ -62,6 +69,8 @@ const configureRest = (long: boolean) => {
 
 const pausedText = computed(() => timeCounting.value ? 'Pause' : 'Play')
 const pauseClass = computed(() => !working.value && !resting.value ? 'hidden' : '')
+const timeFormatted = computed(() => secondsToTime(fullWorkTime.value))
+
 const { cleanInterval, setupInterval } = useInterval(setMainTime, 1000)
 
 watch(timeCounting, (newValue: boolean) => {
@@ -72,11 +81,34 @@ watch(timeCounting, (newValue: boolean) => {
   cleanInterval();
 })
 
-watch([working, resting], ([newWorking, newResting]: [boolean, boolean]) => {
+watch(
+  [working, resting, mainTime, cyclesQtdManager, cycles],
+  ([newWorking, newResting, newMainTime, newCyclesQtdManager, newCycles]: [boolean, boolean, number, boolean[], number]) => {
 
-  if (newWorking) document.body.classList.add('working');
-  if (newResting) document.body.classList.remove('working');
-})
+    if (newWorking) document.body.classList.add('working');
+    if (newResting) document.body.classList.remove('working');
+
+    if (newMainTime > 0) {
+      return
+    }
+
+    if (newWorking && newCyclesQtdManager.length > 0) {
+      configureRest(false)
+      newCyclesQtdManager.pop()
+    } else if (newWorking && newCyclesQtdManager.length <= 0) {
+      configureRest(true);
+      newCyclesQtdManager = new Array(newCycles - 1).fill(true);
+      completedCycles.value += 1
+
+    }
+
+    if (newWorking) numberOfPomodoros.value++
+    if (newResting) configureWork()
+
+
+  }
+);
+
 
 onBeforeUnmount(() => {
   cleanInterval()
@@ -94,10 +126,9 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="details">
-      <p>Testando Lorem ipsum dolor sit ame</p>
-      <p>Testando Lorem ipsum dolor sit ame</p>
-      <p>Testando Lorem ipsum dolor sit ame</p>
-      <p>Testando Lorem ipsum dolor sit ame</p>
+      <p>Ciclos concluidos: {{ completedCycles }}</p>
+      <p>Horas trabalhadas: {{ timeFormatted }}</p>
+      <p>Pomodoros Concluidos: {{ numberOfPomodoros }}</p>
     </div>
 
   </div>

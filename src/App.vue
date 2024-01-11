@@ -4,7 +4,7 @@ import PomodoroView from './views/PomodoroView.vue';
 
 <template>
   <div class="container">
-    <PomodoroView :main-time="1500" :short-rest-time="300" :long-rest-time="900" :cycles="4" />
+    <PomodoroView :main-time="5" :short-rest-time="2" :long-rest-time="3" :cycles="2" />
   </div>
 </template>
 
