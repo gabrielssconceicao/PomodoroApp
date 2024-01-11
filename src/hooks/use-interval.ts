@@ -1,10 +1,10 @@
 // useInterval.ts
-import { ref, onBeforeUnmount } from 'vue';
+import { ref } from 'vue';
 
 export function useInterval<C extends () => void>(
   callback: C,
   delay: number | null,
-): void {
+): { setupInterval: () => void; cleanInterval: () => void } {
   const savedCallback = ref<C>(callback);
 
   // Configura o intervalo
@@ -20,10 +20,9 @@ export function useInterval<C extends () => void>(
     }
   };
 
-  setupInterval();
-
   // Limpa o intervalo ao desmontar o componente
-  onBeforeUnmount(() => {
+  const cleanInterval = () => {
     clearInterval(intervalId.value!);
-  });
+  };
+  return { setupInterval, cleanInterval };
 }

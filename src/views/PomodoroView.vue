@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, computed } from 'vue';
+import { onBeforeUnmount, computed } from 'vue';
 import TimerComponent from '@/components/TimerComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useInterval } from '@/hooks/use-interval';
@@ -23,6 +23,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 const mainTime = ref(props.mainTime);
 const setMainTime = () => mainTime.value -= 1;
 
@@ -33,14 +34,21 @@ const startWork = () => {
   timeCounting.value = true;
   working.value = true;
 }
-watch(timeCounting, (newVal) => {
-  if (newVal) {
-    useInterval(setMainTime, 1000)
-  }
+const startPause = () => {
+  timeCounting.value = !timeCounting.value;
+}
+const pausedText = computed(() => timeCounting.value ? 'Pause' : 'Play')
+const { cleanInterval, setupInterval } = useInterval(setMainTime, 1000)
 
+watch(timeCounting, (newValue: boolean) => {
+  if (newValue) {
+    setupInterval();
+    return
+  }
+  cleanInterval();
 })
 
-watch(working, (newValue) => {
+watch(working, (newValue: boolean) => {
   const body = document.querySelector('body') as HTMLBodyElement;
   if (newValue) {
     body.classList.add('working');
@@ -50,7 +58,9 @@ watch(working, (newValue) => {
 
 })
 
-
+onBeforeUnmount(() => {
+  cleanInterval()
+})
 </script>
 
 <template>
@@ -59,7 +69,7 @@ watch(working, (newValue) => {
     <TimerComponent :main-time="mainTime" />
     <div class="controls">
       <ButtonComponent :text="'Work'" :on-click="startWork" />
-      <ButtonComponent :text="'Pause'" :on-click="() => { }" />
+      <ButtonComponent :text="pausedText" :on-click="startPause" />
       <ButtonComponent :text="'Restart'" :on-click="() => { }" />
     </div>
 
