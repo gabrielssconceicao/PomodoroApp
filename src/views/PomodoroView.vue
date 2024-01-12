@@ -31,11 +31,18 @@ const props = defineProps({
 });
 
 const mainTime = ref(props.mainTime);
-const setMainTime = () => mainTime.value -= 1;
+const setMainTime = () => {
+  mainTime.value -= 1
+  if (working.value) {
+    fullWorkTime.value += 1
+  }
+};
 
 const timeCounting = ref(false);
 const working = ref(false);
 const resting = ref(false);
+
+const workOrRest = computed(() => working.value ? 'Working' : 'Resting')
 
 const cycles = ref(props.cycles);
 const cyclesQtdManager = ref<boolean[]>(new Array(cycles.value - 1).fill(true));
@@ -117,7 +124,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="pomodoro">
-    <h2>You are: working {{ }}</h2>
+    <h2>You are: {{ workOrRest }}</h2>
     <TimerComponent :main-time="mainTime" />
     <div class="controls">
       <ButtonComponent :text="'Work'" :on-click="configureWork" />
