@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
-import { secondsToTime } from '@/utils/seconds-to-time';
+import { computed } from 'vue';
+import { secondsToMinutes } from '@/utils/seconds-to-minutes';
 const props = defineProps({
   mainTime: {
     type: Number,
@@ -8,11 +8,10 @@ const props = defineProps({
   }
 })
 
-
-const timeFormatted = computed(() => secondsToTime(props.mainTime))
+const mainTime = computed(() => secondsToMinutes(props.mainTime))
 </script>
 <template>
-  <div class="timer">{{ timeFormatted }}</div>
+  <div class="timer">{{ mainTime }}</div>
 </template>
 <style scoped>
 .timer {
@@ -20,3 +19,4 @@ const timeFormatted = computed(() => secondsToTime(props.mainTime))
   text-align: center;
 }
 </style>
+@/utils/seconds-to-minutes

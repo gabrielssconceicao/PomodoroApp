@@ -89,8 +89,8 @@ watch(timeCounting, (newValue: boolean) => {
 })
 
 watch(
-  [working, resting, mainTime, cyclesQtdManager, cycles],
-  ([newWorking, newResting, newMainTime, newCyclesQtdManager, newCycles]: [boolean, boolean, number, boolean[], number]) => {
+  [working, resting, mainTime, cyclesQtdManager],
+  ([newWorking, newResting, newMainTime, newCyclesQtdManager]: [boolean, boolean, number, boolean[]]) => {
 
     if (newWorking) document.body.classList.add('working');
     if (newResting) document.body.classList.remove('working');
@@ -104,7 +104,7 @@ watch(
       newCyclesQtdManager.pop()
     } else if (newWorking && newCyclesQtdManager.length <= 0) {
       configureRest(true);
-      newCyclesQtdManager = new Array(newCycles - 1).fill(true);
+      cyclesQtdManager.value = new Array(cycles.value - 1).fill(true);
       completedCycles.value += 1
 
     }
