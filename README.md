@@ -2,7 +2,7 @@
 
 A pomodoro app created using Vue
 
-## 📸
+## 📸 Screenshot
 
 <a href="https://tic-tac-toe-xi-tawny.vercel.app/"  target="_blank" >![Screenshot](./screenshots/app-screenshot.png)</a>
 
